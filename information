@@ -1,0 +1,15 @@
++Spring initializer:
+    BaseApplication.
+    ServletInitializer
+
++Entities 'User', 'Tweet' were created to represent the database table information.
++Dao 'UserRepository' was created to make link with the database. It handles all the mysql query automatically, We don't have to write mysql queries.
+
++HTML Templates:
+    home.html --> normal home page.
+    Register.html --> it contains all columns ie name, email , password etc.
+    register_success.html --> 'submit' button creates 'user' object and put data in mysql columns, then this page is redirected.
+    user_index.html --> After Login authorization, Normal User will be redirected to this URL.
+
++config 'CustomerUserDetails' implements 'UserDetails' interface in order to provide spring security to particular userRole.
+        'UserDetailsServiceImpl' implements 'UserDetailsService' to fetch 'user' from database.
