@@ -43,6 +43,11 @@ public class HomeController {
         ModelAndView mav = new ModelAndView("/Register");
         return mav;
     }
+    @GetMapping("/about")
+    public ModelAndView about(){
+        ModelAndView mav = new ModelAndView("/about");
+        return mav;
+    }
     @PostMapping("/register_success")
     public ModelAndView register_success(User user){
         user.setRole("ROLE_USER");
