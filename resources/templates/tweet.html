@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Tweet - MiniTwitter</title>
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+  <div>
+    <h1>Here You can Tweet</h1>
+  </div>
+  <div>
+  <form th:action="@{/user/tweet_success}" th:object="${tweet}"
+        method="post" style="max-width: 600px; margin: 0">
+
+    <div class="form-group row">
+      <label class="col-4 col-form-label">Tweet: </label>
+      <div class="col-8" align="left">
+        <textarea align="left" th:field="*{description}" rows="4" cols="50"></textarea>
+      </div>
+    </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary">Tweet</button>
+      </div>
+  </form>
+  </div>
+</div>
+</body>
+</html>
