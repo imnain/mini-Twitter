@@ -4,6 +4,7 @@ import com.jpa.base.Dao.UserRepository;
 import com.jpa.base.Entities.Tweet;
 import com.jpa.base.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class HomeController {
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -40,8 +43,15 @@ public class HomeController {
         ModelAndView mav = new ModelAndView("/Register");
         return mav;
     }
+    @GetMapping("/about")
+    public ModelAndView about(){
+        ModelAndView mav = new ModelAndView("/about");
+        return mav;
+    }
     @PostMapping("/register_success")
     public ModelAndView register_success(User user){
+        user.setRole("ROLE_USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         ModelAndView mav = new ModelAndView("register_success");
         return mav;

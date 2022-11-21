@@ -1,11 +1,21 @@
 package com.jpa.base.Dao;
 
 import com.jpa.base.Entities.User;
+import com.jpa.base.dto.OrderResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("select u from User u where u.email = : email")
+    @Query("select u from User u where u.email = :email")
     public User getUserByUserName(@Param("email") String email);
+    @Query("select u from User u where u.id = :id")
+    public User getUserByUserId(@Param("id") int id);
+
+    @Query("select new com.jpa.base.dto.OrderResponse( u.name , t.description, t.tId) FROM User u JOIN u.tweet t")
+    public List<OrderResponse> getJoinInformation();
+    @Query("select new com.jpa.base.dto.OrderResponse( u.name , t.description, t.tId) FROM User u JOIN u.tweet t where t.tId = :tId")
+    public List<OrderResponse> getLike(@Param("tId") int tId);
 }

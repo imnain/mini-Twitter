@@ -11,7 +11,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(targetEntity = Tweet.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    //@JoinColumn(name="user_id" , referencedColumnName = "id")
     private List<Tweet> tweet = new ArrayList<>();
 
     public List<Tweet> getTweet() {
@@ -21,6 +22,19 @@ public class User {
     public void setTweet(List<Tweet> tweet) {
         this.tweet = tweet;
     }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Followers> followers = new ArrayList<>();
+
+    public List<Followers> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<Followers> followers) {
+        this.followers = followers;
+    }
+
+
 
     public User() {
     }
@@ -83,6 +97,8 @@ public class User {
     public void setBio(String bio) {
         this.bio = bio;
     }
+
+
 
     private String name;
     private String email;
