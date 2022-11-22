@@ -18,6 +18,9 @@
 --
 -- Table structure for table `followers`
 --
+CREATE USER 'mini_twitter_app'@'%' IDENTIFIED BY 'Qwertyui@123';
+GRANT ALL PRIVILEGES ON mini_twitter_db.* TO 'mini_twitter_app'@'%';
+FLUSH PRIVILEGES;
 
 DROP TABLE IF EXISTS `followers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
