@@ -22,6 +22,19 @@ public class User {
         this.tweet = tweet;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Followers> followers = new ArrayList<>();
+
+    public List<Followers> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<Followers> followers) {
+        this.followers = followers;
+    }
+
+
+
     public User() {
     }
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Followings</title>
+</head>
+<body>
+<h2>Hello, These are the Followings.</h2>
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">#ID</th>
+    <th scope="col">UserId</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="c : ${followers}">
+    <th scope="row" th:text = "${c.id}">1</th>
+    <td th:text="${c.sid}">M</td>
+  </tr>
+  </tbody>
+</table>
+
+<h3><a href="/user/index">back</a></h3>
+
+</body>
+</html>
