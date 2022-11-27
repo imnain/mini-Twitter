@@ -1,23 +1,20 @@
 package com.jpa.base.controller;
 
 import com.jpa.base.Dao.UserRepository;
-import com.jpa.base.Entities.Tweet;
 import com.jpa.base.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 public class HomeController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
     @Autowired
     private UserRepository userRepository;
-
     @GetMapping("/test")
     @ResponseBody
     public String test(){
@@ -29,13 +26,10 @@ public class HomeController {
         userRepository.save(user);
         return "working";
     }
-
     @GetMapping("/home")
     public ModelAndView loginView(){
-
         ModelAndView mav = new ModelAndView("home");
         return mav;
-
     }
     @GetMapping("/register")
     public ModelAndView register(Model model){
@@ -44,25 +38,15 @@ public class HomeController {
         return mav;
     }
     @GetMapping("/about")
-    public ModelAndView about(){
-        ModelAndView mav = new ModelAndView("/about");
-        return mav;
+    public String about(){
+        return "This is the about page.";
     }
     @PostMapping("/register_success")
-    public ModelAndView register_success(User user){
+    public ModelAndView register_success(User user) throws SQLIntegrityConstraintViolationException {
         user.setRole("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+            userRepository.save(user);
         ModelAndView mav = new ModelAndView("register_success");
         return mav;
     }
-    /*@GetMapping("/main")
-    public ModelAndView mainScreen(Model model){
-        model.addAttribute("tweet", new Tweet());
-        ModelAndView mav = new ModelAndView("main");
-        return mav;
-    }
-    */
-
-
 }

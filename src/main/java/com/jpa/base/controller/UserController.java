@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import com.jpa.base.Entities.User;
-
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.concurrent.locks.Condition;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -54,13 +52,11 @@ public class UserController {
     @GetMapping("/tweet") // User can Tweet
     public ModelAndView tweet(Model model){
         model.addAttribute("tweet", new Tweet());
-        //model.addAttribute("user", new User());
         ModelAndView mav = new ModelAndView("/tweet");
         return mav;
     }
     @GetMapping("/{id}") // Show User Detailed Profile
     public ModelAndView addFollowing(@PathVariable("id") Integer id,@RequestParam(required = false) String condition,Principal principal,Model model){
-
         String userName = principal.getName();
         User currentUser = userRepository.getUserByUserName(userName);
         List<Followers> f = followerRepository.isfollow(currentUser.getId(), id);
@@ -70,7 +66,6 @@ public class UserController {
         else{
             condition = "False";
         }
-
         Optional<User> userOptional = this.userRepository.findById(id);
         User user = userOptional.get();
         model.addAttribute("condition", condition);
@@ -78,7 +73,6 @@ public class UserController {
         ModelAndView mav = new ModelAndView("/user_detailed_profile");
         return mav;
     }
-
     @GetMapping("/my/{id}") // In progress
     public ModelAndView show_my_following(@PathVariable("id") Integer id, Model model){
         Optional<User> userOptional = this.userRepository.findById(id);
@@ -123,9 +117,7 @@ public class UserController {
         int currrentUserId = user.getId();
           likeRepository.isunliked(id,currrentUserId);
         List<Like> alreadyLiked = likeRepository.isliked(id,currrentUserId);
-
         if(alreadyLiked.isEmpty()){
-
             condition = "True";
             List<OrderResponse> tweets = userRepository.getLike(id);
             model.addAttribute("tweets", tweets);
@@ -141,9 +133,8 @@ public class UserController {
             ModelAndView mav = new ModelAndView("detailed_tweet");
             return mav;
         }
-
     }
-    @PostMapping("/countlike_tweet/{id}") //in progess 2222222222222222222222222222222
+    @PostMapping("/countlike_tweet/{id}")
     public ModelAndView likeCounter(@PathVariable("id") Integer id, Model model){
         List<Like> list = likeRepository.likeCounter(id);
         int counter = list.size();
@@ -154,9 +145,6 @@ public class UserController {
     }
     @PostMapping("/follow_user/{id}")   //User can follow
     public ModelAndView follow_user(@PathVariable("id") Integer id, Model model, Followers followers, Principal principal, HttpSession session){
-        //Optional<User> userOptional = this.userRepository.findById(id);
-
-
         String userName = principal.getName();
         User user = userRepository.getUserByUserName(userName);
         User user2 = userRepository.getUserByUserId(id);
@@ -167,14 +155,10 @@ public class UserController {
             followers.setFid(currentUserId);
             followers.setSid(id);
             followerRepository.save(followers);
-            // session.setAttribute("message", new Object());
-
-
             ModelAndView mav = new ModelAndView("follow_success");
             return mav;
         }
         else{
-
             ModelAndView mav = new ModelAndView("alreadyFollowedError");
             return mav;
         }
@@ -182,8 +166,6 @@ public class UserController {
     }
     @PostMapping("/unfollow_user/{id}")   //User can unfollow
     public ModelAndView unfollow_user(@PathVariable("id") Integer id, Model model, Followers followers, Principal principal, HttpSession session){
-
-
         String userName = principal.getName();
         User user = userRepository.getUserByUserName(userName);
         User user2 = userRepository.getUserByUserId(id);
@@ -196,8 +178,6 @@ public class UserController {
     }
     @PostMapping("/tweet_success")
     public ModelAndView tweet_success(@ModelAttribute Tweet tweet, Principal principal){
-
-        //tweetRepository.save(tweet);
         String name = principal.getName();
         User user = this.userRepository.getUserByUserName(name);
         tweet.setUser(user);
@@ -209,12 +189,7 @@ public class UserController {
     }
     @GetMapping("/show_tweets")
     public ModelAndView show_tweets(Model model, Principal principal){
-        //String userName = principal.getName();
-        //User user = this.userRepository.getUserByUserName(userName);
-        //user.getTweet();
         List<Tweet> tweets = this.tweetRepository.findAll();
-        //List<Tweet> tweets = this.tweetRepository.getTweetByUser(user.getId());
-        //List<Tweet> tweets = user.getTweet();
         model.addAttribute("tweets", tweets);
         System.out.println(tweets);
         ModelAndView mav = new ModelAndView("/show_tweets");
@@ -249,13 +224,8 @@ public class UserController {
     public ModelAndView follow(Model model, Principal principal){
         String userName = principal.getName();
         User user = this.userRepository.getUserByUserName(userName);
-        //List<User> uname = (List<User>) this.userRepository.getUserByUserId(3);
         List<Followers> followers = this.followerRepository.getFollowerByUser(user.getId());
-        //List<Followers> followers = this.followerRepository.findAll();
         model.addAttribute("followers", followers);
-        for (int i = 0; i < followers.size(); i++) {
-            System.out.println(followers.get(i));
-        }
         ModelAndView mav = new ModelAndView("/follow");
         return mav;
     }
@@ -263,9 +233,7 @@ public class UserController {
     public ModelAndView myfollowers(Model model, Principal principal){
         String userName = principal.getName();
         User user = this.userRepository.getUserByUserName(userName);
-        //List<User> uname = (List<User>) this.userRepository.getUserByUserId(3);
         List<Followers> followers = this.followerRepository.getFollowersByUser(user.getId());
-        //List<Followers> followers = this.followerRepository.findAll();
         model.addAttribute("followers", followers);
         System.out.println(followers);
         ModelAndView mav = new ModelAndView("/my_followers");
