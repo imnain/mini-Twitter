@@ -1,6 +1,6 @@
 package com.jpa.base;
 
-import com.jpa.base.Dao.UserRepository;
+import com.jpa.base.Dao.Repository.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

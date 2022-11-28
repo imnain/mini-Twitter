@@ -1,7 +1,6 @@
-package com.jpa.base.Dao;
+package com.jpa.base.Dao.Repository;
 
-import com.jpa.base.Entities.Followers;
-import com.jpa.base.Entities.Like;
+import com.jpa.base.Dao.Entities.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +21,4 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
 
     @Query(value = "select * from likes where tid=:n", nativeQuery = true)
     public List<Like> likeCounter(@Param("n") int userId);
-
-
 }
