@@ -1,9 +1,9 @@
-package com.jpa.base.config;
+package com.jpa.base.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.jpa.base.Entities.User;
+import com.jpa.base.Dao.Entities.User;
 import java.util.Collection;
 import java.util.List;
 

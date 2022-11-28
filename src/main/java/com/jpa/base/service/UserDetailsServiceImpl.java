@@ -1,7 +1,7 @@
-package com.jpa.base.config;
+package com.jpa.base.service;
 
-import com.jpa.base.Dao.UserRepository;
-import com.jpa.base.Entities.User;
+import com.jpa.base.Dao.Repository.UserRepository;
+import com.jpa.base.Dao.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

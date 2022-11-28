@@ -1,4 +1,4 @@
-package com.jpa.base.Entities;
+package com.jpa.base.Dao.Entities;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package com.jpa.base.dto;
+package com.jpa.base.Dao.Entities;
 
 import lombok.*;
 

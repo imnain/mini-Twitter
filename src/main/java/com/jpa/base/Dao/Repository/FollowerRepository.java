@@ -1,13 +1,12 @@
-package com.jpa.base.Dao;
+package com.jpa.base.Dao.Repository;
 
-import com.jpa.base.Entities.Followers;
+import com.jpa.base.Dao.Entities.Followers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import javax.websocket.server.PathParam;
 
 import java.util.List;
 
