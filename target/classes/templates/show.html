@@ -43,14 +43,12 @@
                 <tr>
                     <th scope="col">User Name:</th>
                     <th scope="col">Tweet:</th>
-                    <th scope="col">Id:</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="c : ${tweets}">
                     <td th:text="${c.name}">m</td>
                     <td th:text="${c.description}">M</td>
-                    <td th:text="${c.tId}">M</td>
 
                     <td >
                         <form method="post" th:action="@{'/user/like_tweet/'+${c.tId}}">

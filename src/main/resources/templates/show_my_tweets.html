@@ -41,14 +41,12 @@
       <table class="table">
         <thead>
         <tr>
-          <th scope="col">#ID</th>
           <th scope="col">Name</th>
           <th scope="col">Tweet</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="c : ${tweets}">
-          <th scope="row" th:text = "${'Tweet'+c.tId}">1</th>
           <td th:text="${user.name}">name</td>
           <td th:text="${c.description}">M</td>
         </tr>

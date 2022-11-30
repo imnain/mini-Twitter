@@ -8,14 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 public class HomeController {
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @GetMapping("/home")

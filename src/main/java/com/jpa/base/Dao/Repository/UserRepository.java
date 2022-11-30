@@ -11,6 +11,9 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u where u.email = :email")
     public User getUserByUserName(@Param("email") String email);
+    @Query(value = "select * from user where email =:email", nativeQuery = true)
+    public List<User> getUserByEmail(@Param("email") String email);
+
     @Query("select u from User u where u.id = :id")
     public User getUserByUserId(@Param("id") int id);
 
@@ -18,4 +21,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     public List<OrderResponse> getJoinInformation();
     @Query("select new com.jpa.base.Dao.Entities.OrderResponse( u.name , t.description, t.tId) FROM User u JOIN u.tweet t where t.tId = :tId")
     public List<OrderResponse> getLike(@Param("tId") int tId);
+
 }

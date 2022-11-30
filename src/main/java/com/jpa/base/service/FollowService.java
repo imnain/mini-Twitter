@@ -7,6 +7,7 @@ import com.jpa.base.Dao.Repository.LikeRepository;
 import com.jpa.base.Dao.Repository.TweetRepository;
 import com.jpa.base.Dao.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,9 +24,11 @@ public class FollowService {
     private FollowerRepository followerRepository;
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private UserService userService;
 
     public void unfollowUser(Principal principal, Model model, Integer id){
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = userRepository.getUserByUserName(userName);
         User user2 = userRepository.getUserByUserId(id);
         int currentUserId = user.getId();
@@ -33,7 +36,7 @@ public class FollowService {
         followerRepository.isunfollow(currentUserId, id);
     }
     public void followUser(Principal principal, Model model, Integer id, Followers followers){
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = userRepository.getUserByUserName(userName);
         User user2 = userRepository.getUserByUserId(id);
         int currentUserId = user.getId();
@@ -43,13 +46,13 @@ public class FollowService {
         followerRepository.save(followers);
     }
     public void showUserFollowing(Principal principal, Model model){
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = this.userRepository.getUserByUserName(userName);
         List<Followers> followers = this.followerRepository.getFollowerByUser(user.getId());
         model.addAttribute("followers", followers);
     }
     public void showUserFollowers(Principal principal, Model model){
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = this.userRepository.getUserByUserName(userName);
         List<Followers> followers = this.followerRepository.getFollowersByUser(user.getId());
         model.addAttribute("followers", followers);

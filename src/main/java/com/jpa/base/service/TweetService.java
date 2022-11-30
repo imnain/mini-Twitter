@@ -11,7 +11,6 @@ import com.jpa.base.Dao.Entities.OrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -25,15 +24,15 @@ public class TweetService {
     private FollowerRepository followerRepository;
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private UserService userService;
     public void likeTweet(Principal principal, Model model, Integer id, Like like){
         String condition;
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = userRepository.getUserByUserName(userName);
         int currrentUserId = user.getId();
         List<Like> alreadyLiked = likeRepository.isliked(id,currrentUserId);
-
         if(alreadyLiked.isEmpty()){
-
             condition = "True";
             like.setUid(currrentUserId);
             like.setTid(id);
@@ -48,7 +47,7 @@ public class TweetService {
     }
     public void unlikeTweet(Principal principal, Model model, Integer id){
         String condition;
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = userRepository.getUserByUserName(userName);
         int currrentUserId = user.getId();
         likeRepository.isunliked(id,currrentUserId);
@@ -67,11 +66,10 @@ public class TweetService {
         List<Like> list = likeRepository.likeCounter(id);
         int counter = list.size();
         model.addAttribute("counter", counter);
-        System.out.println("Counter is " + counter);
     }
     public void tweetSuccess(Principal principal, Tweet tweet){
-        String name = principal.getName();
-        User user = this.userRepository.getUserByUserName(name);
+        String userName =userService.getCurrentUserEmail(principal);
+        User user = this.userRepository.getUserByUserName(userName);
         tweet.setUser(user);
         user.getTweet().add(tweet);
         this.userRepository.save(user);
@@ -82,14 +80,14 @@ public class TweetService {
         model.addAttribute("tweets", tweets);
     }
     public void showMyTweets(Principal principal, Model model){
-        String userName = principal.getName();
+        String userName = userService.getCurrentUserEmail(principal);
         User user = this.userRepository.getUserByUserName(userName);
         List<Tweet> tweets = this.tweetRepository.getTweetByUser(user.getId());
+        model.addAttribute("user", user);
         model.addAttribute("tweets",tweets);
     }
     public void postTweet(Model model){
+
         model.addAttribute("tweet", new Tweet());
     }
-
-
 }
