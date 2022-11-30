@@ -11,6 +11,8 @@ import com.jpa.base.Dao.Entities.OrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+
+import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.List;
 
@@ -73,7 +75,6 @@ public class TweetService {
         tweet.setUser(user);
         user.getTweet().add(tweet);
         this.userRepository.save(user);
-        System.out.println("Data" + tweet);
     }
     public void showAllTweets(Model model){
         List<OrderResponse> tweets = this.userRepository.getJoinInformation();
@@ -87,7 +88,6 @@ public class TweetService {
         model.addAttribute("tweets",tweets);
     }
     public void postTweet(Model model){
-
         model.addAttribute("tweet", new Tweet());
     }
 }

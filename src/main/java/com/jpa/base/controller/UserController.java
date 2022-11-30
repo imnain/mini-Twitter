@@ -7,10 +7,14 @@ import com.jpa.base.Dao.Repository.UserRepository;
 import com.jpa.base.Dao.Entities.Followers;
 import com.jpa.base.Dao.Entities.Like;
 import com.jpa.base.Dao.Entities.Tweet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.awt.print.Pageable;
 import java.security.Principal;
 import com.jpa.base.service.*;
 
@@ -36,7 +40,7 @@ public class UserController {
         return mav;
     }
     /* ------------Tweet Controller------------------- */
-    @GetMapping("/tweet") // User can Tweet
+    @GetMapping("/tweet")
     public ModelAndView tweet(Model model){
         tweetService.postTweet(model);
         ModelAndView mav = new ModelAndView("/tweet");
@@ -98,8 +102,8 @@ public class UserController {
         return mav;
     }
     @GetMapping("/show_users")
-    public ModelAndView show_users(Model model){
-        userservice.showAllUsers(model);
+    public ModelAndView show_users(Model model, Principal principal){
+        userservice.showAllUsers(model, principal);
         ModelAndView mav = new ModelAndView("/show_users");
         return mav;
     }
