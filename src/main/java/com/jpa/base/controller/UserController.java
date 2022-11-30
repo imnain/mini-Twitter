@@ -11,21 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.jpa.base.Dao.Entities.User;
 import java.security.Principal;
 import com.jpa.base.service.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TweetRepository tweetRepository;
-    @Autowired
-    private FollowerRepository followerRepository;
-    @Autowired
-    private LikeRepository likeRepository;
     @Autowired
     private UserService userservice;
     @Autowired
@@ -34,19 +25,15 @@ public class UserController {
     private FollowService followService;
     @RequestMapping("/index")
     public ModelAndView screen(Model model, Principal principal){
+        userservice.isUserAlreadyExists(principal, model);
         ModelAndView mav = new ModelAndView("/user_index");
         return mav;
     }
     @RequestMapping("/profile")     // show user profile
     public ModelAndView profile(Model model, Principal principal){
+        userservice.showCurrentUserProfile(principal, model);
         ModelAndView mav = new ModelAndView("/user_profile");
         return mav;
-    }
-    @ModelAttribute
-    public void addCommonData(Model model, Principal principal){
-        String userName = principal.getName();
-        User user = userRepository.getUserByUserName(userName);
-        model.addAttribute("user", user);
     }
     /* ------------Tweet Controller------------------- */
     @GetMapping("/tweet") // User can Tweet
