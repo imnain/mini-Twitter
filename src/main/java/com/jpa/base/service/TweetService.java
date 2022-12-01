@@ -9,10 +9,12 @@ import com.jpa.base.Dao.Repository.TweetRepository;
 import com.jpa.base.Dao.Repository.UserRepository;
 import com.jpa.base.Dao.Entities.OrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.List;
 
@@ -76,8 +78,11 @@ public class TweetService {
         user.getTweet().add(tweet);
         this.userRepository.save(user);
     }
-    public void showAllTweets(Model model){
-        List<OrderResponse> tweets = this.userRepository.getJoinInformation();
+    public void showAllTweets(Integer page, Model model){
+        Pageable pageable = PageRequest.of(page,5);
+        Page<OrderResponse> tweets = this.userRepository.getJoinInformation(pageable);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", tweets.getTotalPages());
         model.addAttribute("tweets", tweets);
     }
     public void showMyTweets(Principal principal, Model model){

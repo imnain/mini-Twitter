@@ -1,14 +1,8 @@
 package com.jpa.base.controller;
 
-import com.jpa.base.Dao.Repository.FollowerRepository;
-import com.jpa.base.Dao.Repository.LikeRepository;
-import com.jpa.base.Dao.Repository.TweetRepository;
-import com.jpa.base.Dao.Repository.UserRepository;
 import com.jpa.base.Dao.Entities.Followers;
 import com.jpa.base.Dao.Entities.Like;
 import com.jpa.base.Dao.Entities.Tweet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +23,7 @@ public class UserController {
     private FollowService followService;
     @RequestMapping("/index")
     public ModelAndView screen(Model model, Principal principal){
+        //userservice.fakeDataGenerate(50);
         userservice.isUserAlreadyExists(principal, model);
         ModelAndView mav = new ModelAndView("/user_index");
         return mav;
@@ -70,9 +65,9 @@ public class UserController {
         ModelAndView mav = new ModelAndView("/tweet_success");
         return mav;
     }
-    @GetMapping("/show")
-    public ModelAndView show(Model model){
-        tweetService.showAllTweets(model);
+    @GetMapping("/show/{page}")
+    public ModelAndView show(@PathVariable("page") Integer page, Model model){
+        tweetService.showAllTweets(page, model);
         ModelAndView mav = new ModelAndView("/show");
         return mav;
     }
@@ -101,9 +96,9 @@ public class UserController {
         ModelAndView mav = new ModelAndView("unfollow_success");
         return mav;
     }
-    @GetMapping("/show_users")
-    public ModelAndView show_users(Model model, Principal principal){
-        userservice.showAllUsers(model, principal);
+    @GetMapping("/show_users/{page}")
+    public ModelAndView show_users(@PathVariable("page") Integer page, Model model, Principal principal){
+        userservice.showAllUsers(page,model,principal);
         ModelAndView mav = new ModelAndView("/show_users");
         return mav;
     }

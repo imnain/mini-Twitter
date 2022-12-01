@@ -1,5 +1,6 @@
 package com.jpa.base.service;
 
+import com.github.javafaker.Faker;
 import com.jpa.base.Dao.Entities.Followers;
 import com.jpa.base.Dao.Entities.User;
 import com.jpa.base.Dao.Repository.FollowerRepository;
@@ -11,6 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -18,9 +22,12 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Service
 public class UserService {
@@ -56,11 +63,12 @@ public class UserService {
         User user = userRepository.getUserByUserName(userName);
         model.addAttribute("user", user);
     }
-    public void showAllUsers(Model model, Principal principal){
-        List<User> users = this.userRepository.findAll();
+    public void showAllUsers(Integer page,Model model, Principal principal){
+        Pageable pageable = PageRequest.of(page,10);
+        Page<User> users = this.userRepository.findAll(pageable);
         String userName = getCurrentUserEmail(principal);
         User user = userRepository.getUserByUserName(userName);
-        users.remove(user);
+        //users.remove(user);
         model.addAttribute("users", users);
     }
     public void register(Model model){
@@ -91,8 +99,6 @@ public class UserService {
         DefaultOAuth2User userDetails =  (DefaultOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getAttribute("email");
     }
-
-
     public void isUserAlreadyExists(Principal principal, Model model){
         String currentEmail = getCurrentUserEmail(principal);
         List<User> users = userRepository.getUserByEmail(currentEmail);
@@ -121,4 +127,19 @@ public class UserService {
         }
         return currentEmail;
     }
+        Faker faker = new Faker();
+        public void run(){
+            User user = new User();
+            user.setName(faker.name().fullName());
+            user.setRole("ROLE_USER");
+            user.setEmail(faker.internet().emailAddress());
+            user.setBio(faker.gameOfThrones().character());
+            user.setPassword(passwordEncoder.encode(faker.internet().password()));
+            userRepository.save(user);
+        }
+        public void fakeDataGenerate(int numOfUsers){
+            for(int i=0; i<numOfUsers; i++){
+                run();
+            }
+        }
 }
