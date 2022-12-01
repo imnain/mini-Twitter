@@ -1,9 +1,5 @@
 package com.jpa.base.controller;
 
-import com.jpa.base.Dao.Repository.FollowerRepository;
-import com.jpa.base.Dao.Repository.LikeRepository;
-import com.jpa.base.Dao.Repository.TweetRepository;
-import com.jpa.base.Dao.Repository.UserRepository;
 import com.jpa.base.Dao.Entities.Followers;
 import com.jpa.base.Dao.Entities.Like;
 import com.jpa.base.Dao.Entities.Tweet;
@@ -11,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.awt.print.Pageable;
 import java.security.Principal;
 import com.jpa.base.service.*;
 
@@ -25,6 +23,7 @@ public class UserController {
     private FollowService followService;
     @RequestMapping("/index")
     public ModelAndView screen(Model model, Principal principal){
+        //userservice.fakeDataGenerate(50);
         userservice.isUserAlreadyExists(principal, model);
         ModelAndView mav = new ModelAndView("/user_index");
         return mav;
@@ -36,7 +35,7 @@ public class UserController {
         return mav;
     }
     /* ------------Tweet Controller------------------- */
-    @GetMapping("/tweet") // User can Tweet
+    @GetMapping("/tweet")
     public ModelAndView tweet(Model model){
         tweetService.postTweet(model);
         ModelAndView mav = new ModelAndView("/tweet");
@@ -66,9 +65,9 @@ public class UserController {
         ModelAndView mav = new ModelAndView("/tweet_success");
         return mav;
     }
-    @GetMapping("/show")
-    public ModelAndView show(Model model){
-        tweetService.showAllTweets(model);
+    @GetMapping("/show/{page}")
+    public ModelAndView show(@PathVariable("page") Integer page, Model model){
+        tweetService.showAllTweets(page, model);
         ModelAndView mav = new ModelAndView("/show");
         return mav;
     }
@@ -97,16 +96,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("unfollow_success");
         return mav;
     }
-    @GetMapping("/show_users")
-    public ModelAndView show_users(Model model){
-        userservice.showAllUsers(model);
+    @GetMapping("/show_users/{page}")
+    public ModelAndView show_users(@PathVariable("page") Integer page, Model model, Principal principal){
+        userservice.showAllUsers(page,model,principal);
         ModelAndView mav = new ModelAndView("/show_users");
         return mav;
     }
     @GetMapping("/follow")
     public ModelAndView follow(Model model, Principal principal){
         followService.showUserFollowing(principal, model);
-        ModelAndView mav = new ModelAndView("/follow");
+        ModelAndView mav = new ModelAndView("/my_following");
         return mav;
     }
     @GetMapping("/my_followers")

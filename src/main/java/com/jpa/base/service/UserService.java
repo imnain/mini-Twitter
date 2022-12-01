@@ -1,27 +1,33 @@
 package com.jpa.base.service;
 
+import com.github.javafaker.Faker;
 import com.jpa.base.Dao.Entities.Followers;
 import com.jpa.base.Dao.Entities.User;
 import com.jpa.base.Dao.Repository.FollowerRepository;
 import com.jpa.base.Dao.Repository.LikeRepository;
 import com.jpa.base.Dao.Repository.TweetRepository;
 import com.jpa.base.Dao.Repository.UserRepository;
+import com.jpa.base.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Service
 public class UserService {
@@ -35,6 +41,8 @@ public class UserService {
     private LikeRepository likeRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    static Logger log = LogManager.getLogger(UserService.class);
+    Response response = new Response();
     public void showUserProfile(Principal principal,Model model,Integer id){
         String condition;
         String userName = getCurrentUserEmail(principal);
@@ -55,17 +63,31 @@ public class UserService {
         User user = userRepository.getUserByUserName(userName);
         model.addAttribute("user", user);
     }
-    public void showAllUsers(Model model){
-        List<User> users = this.userRepository.findAll();
+    public void showAllUsers(Integer page,Model model, Principal principal){
+        Pageable pageable = PageRequest.of(page,10);
+        Page<User> users = this.userRepository.findAll(pageable);
+        String userName = getCurrentUserEmail(principal);
+        User user = userRepository.getUserByUserName(userName);
+        //users.remove(user);
         model.addAttribute("users", users);
     }
     public void register(Model model){
         model.addAttribute("user", new User());
     }
-    public void registerSuccess(User user){
+    public Response registerSuccess(User user){
         user.setRole("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        try{
+            userRepository.save(user);
+        }
+        catch (DataIntegrityViolationException e){
+            log.info("Email already exists in the database, please use a different email", e);
+            response.success = false;
+            response.message = "Email already exists in the database, please use a different email";
+            return response;
+        }
+        response.success = true;
+        return response;
     }
     public String googleCurrentUserName() {
 
@@ -77,14 +99,10 @@ public class UserService {
         DefaultOAuth2User userDetails =  (DefaultOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getAttribute("email");
     }
-
-
     public void isUserAlreadyExists(Principal principal, Model model){
-//        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principal;
         String currentEmail = getCurrentUserEmail(principal);
         List<User> users = userRepository.getUserByEmail(currentEmail);
         if(users.isEmpty()){
-
             User user = new User();
             user.setEmail(googleCurrentUserEmail());
             user.setRole("ROLE_USER");
@@ -93,20 +111,35 @@ public class UserService {
             userRepository.save(user);
         }
     }
-    public String currentUserName(@AuthenticationPrincipal OAuth2User principal) {
-
-        DefaultOAuth2User userDetails =  (DefaultOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getAttribute("login");
-    }
     public String getCurrentUserEmail(Principal principal){
-        if(principal instanceof OAuth2AuthenticationToken){
-            DefaultOidcUser oidcUser = (DefaultOidcUser) (((OAuth2AuthenticationToken) principal).getPrincipal());
-            String currentEmail = (String) oidcUser.getAttributes().get("email");
-            return currentEmail;
+        String currentEmail = "";
+        try{
+            if(principal instanceof OAuth2AuthenticationToken){
+                DefaultOidcUser oidcUser = (DefaultOidcUser) (((OAuth2AuthenticationToken) principal).getPrincipal());
+                currentEmail = (String) oidcUser.getAttributes().get("email");
+            }
+            else{
+                currentEmail = principal.getName();
+            }
         }
-        else{
-            String currentEmail = principal.getName();
-            return currentEmail;
+        catch (Exception e){
+            log.info("Unable to get current user Email", e);
         }
+        return currentEmail;
     }
+        Faker faker = new Faker();
+        public void run(){
+            User user = new User();
+            user.setName(faker.name().fullName());
+            user.setRole("ROLE_USER");
+            user.setEmail(faker.internet().emailAddress());
+            user.setBio(faker.gameOfThrones().character());
+            user.setPassword(passwordEncoder.encode(faker.internet().password()));
+            userRepository.save(user);
+        }
+        public void fakeDataGenerate(int numOfUsers){
+            for(int i=0; i<numOfUsers; i++){
+                run();
+            }
+        }
 }
