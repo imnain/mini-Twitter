@@ -4,31 +4,32 @@
   <meta charset="ISO-8859-1">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Tweets List</title>
+  <title>User Following</title>
 </head>
 <body>
 <section>
   <div class="container">
     <div class="my-card">
-      <h1 style="text-align: center"> <b> My Tweets</b></h1>
+      <h1 style="text-align: center"> <b>Followings</b></h1>
+
       <table class="table">
         <thead>
         <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Tweet</th>
+          <th scope="col">#ID</th>
+          <th scope="col" style="text-align:center">UserId</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="c : ${tweets}">
-          <td th:text="${user.name}">name</td>
-          <td th:text="${c.description}">M</td>
+        <tr style="" th:each="c : ${followers}">
+          <th scope="row" th:text = "${c.id}">1</th>
+          <td style="text-align:center">
+            <a class="following_a" style="background-color: #498bc6;border-radius: 17px" href="#" th:href="@{'/user/'+${c.sid}}" >
+              <span th:text="${ 'miniUser' + c.sid}">m</span>
+            </a>
+          </td>
         </tr>
         </tbody>
       </table>
-
-
-
-
       <h3 style="text-align:right"><a href="/user/index">back</a></h3>
 
     </div>
@@ -38,6 +39,8 @@
 
 </body>
 </html>
+
+
 
 
 

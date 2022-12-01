@@ -25,6 +25,11 @@ public class HomeController {
         ModelAndView mav = new ModelAndView("home");
         return mav;
     }
+    @GetMapping("/test")
+    public ModelAndView test(){
+        ModelAndView mav = new ModelAndView("test");
+        return mav;
+    }
     @GetMapping("/register")
     public ModelAndView register(Model model){
         userService.register(model);

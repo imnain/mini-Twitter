@@ -105,7 +105,7 @@ public class UserController {
     @GetMapping("/follow")
     public ModelAndView follow(Model model, Principal principal){
         followService.showUserFollowing(principal, model);
-        ModelAndView mav = new ModelAndView("/follow");
+        ModelAndView mav = new ModelAndView("/my_following");
         return mav;
     }
     @GetMapping("/my_followers")
