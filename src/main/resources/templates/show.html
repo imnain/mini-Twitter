@@ -38,6 +38,15 @@
                 </tr>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" style="display:flex; flex-direction:row; justify-content: space-between;">
+                    <li class="page-item"><a style = "background:#007bff;" class="page-link" href="/user/show/0">First</a></li>
+                    <li class="page-item" th:if="${currentPage != 0 }"><a style = "background:#007bff;" class="page-link" href="#" th:href="@{'/user/show/'+${currentPage-1}}">Previous</a></li>
+                    <li class="page-item" th:if="${currentPage+1 != totalPages}"><a style = "background:#007bff;" class="page-link" href="#" th:href="@{'/user/show/'+${currentPage+1}}">Next</a></li>
+                    <li class="page-item"><a style = "background:#007bff;" class="page-link" href="#" th:href="@{'/user/show/' +${totalPages-1}}">Last</a></li>
+                    <li class="page-item" style="float:right;"> <span style = "background:lightgrey; float:right;" class="page-link" th:text="${ 'Page Number: ' + currentPage}"></span></li>
+                </ul>
+            </nav>
             <h3 style="text-align:right"><a href="/user/index">back</a></h3>
 
         </div>
