@@ -70,6 +70,8 @@ public class UserService {
         User user = userRepository.getUserByUserName(userName);
         //users.remove(user);
         model.addAttribute("users", users);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", users.getTotalPages());
     }
     public void register(Model model){
         model.addAttribute("user", new User());

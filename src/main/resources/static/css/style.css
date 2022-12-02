@@ -50,6 +50,12 @@ text-color: white;
   color: black;
   background-color: #498bc6;
 }
+.body_image{
+       background-image: url('https://i.postimg.cc/Bn1Kjh56/3040067.jpg');
+             background-repeat: no-repeat;
+             background-attachment: fixed;
+             background-size: 100% 100%;
+}
 
 .user_index_css{
       background: lightblue;
